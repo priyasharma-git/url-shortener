@@ -1,11 +1,13 @@
 package com.urlShortner.backend.controller;
 
-import com.urlShortner.backend.entity.Url;
+import com.urlShortner.backend.dto.UrlRequest;
+import com.urlShortner.backend.dto.UrlResponse;
 import com.urlShortner.backend.service.UrlService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/url")
+@RequestMapping("/api/v1/urls")
 @CrossOrigin(origins = "*")
 public class UrlController {
 
@@ -15,8 +17,11 @@ public class UrlController {
         this.urlService = urlService;
     }
 
-    @PostMapping("/shorten")
-    public Url shortenUrl(@RequestBody String originalUrl) {
-        return urlService.createShortUrl(originalUrl);
+
+    @PostMapping
+    public UrlResponse createShortUrl(
+            @Valid @RequestBody UrlRequest request
+    ) {
+        return urlService.createShortUrl(request);
     }
 }

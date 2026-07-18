@@ -1,6 +1,7 @@
 version: '3.8'
 
 services:
+
   postgres:
     image: postgres:16
     container_name: url-shortener-postgres
@@ -11,10 +12,33 @@ services:
       POSTGRES_PASSWORD: postgres
     ports:
       - "5432:5432"
-
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: url-shortener-pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@urlshortener.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
   redis:
     image: redis:7
     container_name: url-shortener-redis
     restart: always
     ports:
       - "6379:6379"
+  redis-insight:
+    image: redis/redisinsight:latest
+    container_name: url-shortener-redis-insight
+    restart: always
+    ports:
+      - "5540:5540"
+    depends_on:
+      - redis
+
+volumes:
+  postgres_data:

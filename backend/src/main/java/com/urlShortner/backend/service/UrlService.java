@@ -1,11 +1,13 @@
 package com.urlShortner.backend.service;
 
+import com.urlShortner.backend.dto.UrlRequest;
+import com.urlShortner.backend.dto.UrlResponse;
 import com.urlShortner.backend.entity.Url;
 import com.urlShortner.backend.repository.UrlRepository;
+import com.urlShortner.backend.util.Base62Encoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Random;
 
 @Service
 public class UrlService {
@@ -16,31 +18,44 @@ public class UrlService {
         this.urlRepository = urlRepository;
     }
 
-    public Url createShortUrl(String originalUrl) {
 
-        Url url = new Url();
+    public UrlResponse createShortUrl(UrlRequest request) {
 
-        url.setOriginalUrl(originalUrl);
-        url.setShortCode(generateShortCode());
-        url.setCreatedAt(LocalDateTime.now());
-        url.setExpiresAt(LocalDateTime.now().plusDays(30));
-        url.setClickCount(0L);
+        Url url = Url.builder()
+                .originalUrl(request.getOriginalUrl())
+                .customAlias(request.getCustomAlias())
+                .createdAt(LocalDateTime.now())
+                .expiresAt(LocalDateTime.now().plusDays(30))
+                .clickCount(0L)
+                .build();
 
-        return urlRepository.save(url);
-    }
 
-    private String generateShortCode() {
+        Url savedUrl = urlRepository.save(url);
 
-        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-        Random random = new Random();
+        String shortCode;
 
-        StringBuilder sb = new StringBuilder();
+        if (request.getCustomAlias() != null &&
+                !request.getCustomAlias().isBlank()) {
 
-        for (int i = 0; i < 6; i++) {
-            sb.append(chars.charAt(random.nextInt(chars.length())));
+            shortCode = request.getCustomAlias();
+
+        } else {
+
+            shortCode = Base62Encoder.encode(savedUrl.getId());
+
         }
 
-        return sb.toString();
+
+        savedUrl.setShortCode(shortCode);
+
+        urlRepository.save(savedUrl);
+
+
+        return new UrlResponse(
+                shortCode,
+                "http://localhost:8080/" + shortCode,
+                savedUrl.getExpiresAt()
+        );
     }
 }

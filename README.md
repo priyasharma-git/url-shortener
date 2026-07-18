@@ -1,8 +1,12 @@
 # Distributed URL Shortener
 
-A modern distributed URL shortener built with Spring Boot, PostgreSQL, Redis, Docker, and React.
+A modern distributed URL shortening platform built with Spring Boot, React, PostgreSQL, Redis, and Docker.
 
-## Features
+The application supports creating short URLs, redirecting users, tracking analytics, custom aliases, rate limiting, and expiring links.
+
+---
+
+# Features
 
 * Short URL generation
 * Custom aliases
@@ -12,9 +16,11 @@ A modern distributed URL shortener built with Spring Boot, PostgreSQL, Redis, Do
 * Redis caching
 * Modern React frontend
 
-## Tech Stack
+---
 
-### Backend
+# Tech Stack
+
+## Backend
 
 * Java 17
 * Spring Boot 3.5.4
@@ -23,7 +29,7 @@ A modern distributed URL shortener built with Spring Boot, PostgreSQL, Redis, Do
 * Redis 7
 * Maven
 
-### Frontend
+## Frontend
 
 * React
 * Vite
@@ -31,7 +37,7 @@ A modern distributed URL shortener built with Spring Boot, PostgreSQL, Redis, Do
 * Tailwind CSS
 * Framer Motion
 
-### Infrastructure
+## Infrastructure
 
 * Docker
 * Docker Compose
@@ -44,8 +50,12 @@ A modern distributed URL shortener built with Spring Boot, PostgreSQL, Redis, Do
 distributed-url-shortener/
 
 ├── backend/
+│   ├── src/
+│   └── README.md
 │
 ├── frontend/
+│   ├── src/
+│   └── README.md
 │
 ├── docker-compose.yml
 │
@@ -68,6 +78,10 @@ This starts:
 
 * PostgreSQL on port 5432
 * Redis on port 6379
+* pgAdmin on port 5050
+* Redis Insight on port 5540
+
+---
 
 ## Start Backend
 
@@ -82,6 +96,8 @@ Backend runs at:
 ```
 http://localhost:8080
 ```
+
+---
 
 ## Start Frontend
 
@@ -103,6 +119,55 @@ http://localhost:5173
 
 ---
 
+# Development Tools
+
+## PostgreSQL UI
+
+Open:
+
+```
+http://localhost:5050
+```
+
+Login:
+
+```
+Email:
+admin@urlshortener.com
+
+Password:
+admin
+```
+
+Database connection:
+
+```
+Host: postgres
+Port: 5432
+Database: url_shortener
+Username: postgres
+Password: postgres
+```
+
+---
+
+## Redis UI
+
+Redis Insight:
+
+```
+http://localhost:5540
+```
+
+Connection:
+
+```
+Host: redis
+Port: 6379
+```
+
+---
+
 # Architecture
 
 ```
@@ -117,20 +182,36 @@ Spring Boot API
  -----------------
  |               |
 PostgreSQL     Redis
-
 ```
 
 ---
 
 # Development Roadmap
 
+## Backend
+
 * [x] Initial Spring Boot setup
 * [x] PostgreSQL integration
 * [x] Redis infrastructure
 * [ ] URL generation service
+* [ ] Base62 short code generation
 * [ ] Redirect service
 * [ ] Redis caching
 * [ ] Analytics system
 * [ ] Rate limiting
-* [ ] React dashboard
-* [ ] Deployment setup
+* [ ] Expiration handling
+
+## Frontend
+
+* [ ] React setup
+* [ ] Dashboard UI
+* [ ] URL creation interface
+* [ ] Analytics visualization
+* [ ] Animations
+* [ ] Responsive design
+
+## Deployment
+
+* [ ] Docker production setup
+* [ ] CI/CD pipeline
+* [ ] Cloud deployment
