@@ -1,31 +1,64 @@
-# URL Shortener Backend
+# Distributed URL Shortener
 
-A Spring Boot backend for a URL Shortener application.
+A modern distributed URL shortener built with Spring Boot, PostgreSQL, Redis, Docker, and React.
+
+## Features
+
+* Short URL generation
+* Custom aliases
+* Link expiration
+* Analytics dashboard
+* Rate limiting
+* Redis caching
+* Modern React frontend
 
 ## Tech Stack
 
+### Backend
+
 * Java 17
 * Spring Boot 3.5.4
+* Spring Data JPA
 * PostgreSQL 16
 * Redis 7
 * Maven
+
+### Frontend
+
+* React
+* Vite
+* TypeScript
+* Tailwind CSS
+* Framer Motion
+
+### Infrastructure
+
 * Docker
+* Docker Compose
 
 ---
 
-## Prerequisites
+# Project Structure
 
-Make sure the following are installed:
+```
+distributed-url-shortener/
 
-* Java 17
-* Maven
-* Docker Desktop
+├── backend/
+│
+├── frontend/
+│
+├── docker-compose.yml
+│
+└── README.md
+```
 
 ---
 
-## Starting the Infrastructure
+# Running Locally
 
-From the project root (where `docker-compose.yml` is located):
+## Start Infrastructure
+
+From the project root:
 
 ```bash
 docker compose up -d
@@ -33,89 +66,71 @@ docker compose up -d
 
 This starts:
 
-* PostgreSQL (Port 5432)
-* Redis (Port 6379)
+* PostgreSQL on port 5432
+* Redis on port 6379
 
-To verify:
-
-```bash
-docker ps
-```
-
-To stop the containers:
-
-```bash
-docker compose down
-```
-
----
-
-## Running the Backend
-
-Navigate to the backend project:
+## Start Backend
 
 ```bash
 cd backend
-```
 
-Run the application:
-
-```bash
 mvn spring-boot:run
 ```
 
-If you want a clean build first:
-
-```bash
-mvn clean spring-boot:run
-```
-
----
-
-## Default Configuration
-
-### PostgreSQL
-
-* Host: `localhost`
-* Port: `5432`
-* Database: `url_shortener`
-* Username: `postgres`
-* Password: `postgres`
-
-### Redis
-
-* Host: `localhost`
-* Port: `6379`
-
----
-
-## Verify the Application
-
-When the application starts successfully, you should see logs similar to:
-
-```
-Tomcat started on port 8080
-Started BackendApplication
-```
-
-The backend will be available at:
+Backend runs at:
 
 ```
 http://localhost:8080
 ```
 
----
+## Start Frontend
 
-## Stopping the Backend
-
-Press:
-
-```
-Ctrl + C
-```
-
-Then stop Docker containers if needed:
+Open another terminal:
 
 ```bash
-docker compose down
+cd frontend
+
+npm install
+
+npm run dev
 ```
+
+Frontend runs at:
+
+```
+http://localhost:5173
+```
+
+---
+
+# Architecture
+
+```
+React Frontend
+
+        |
+        |
+
+Spring Boot API
+
+        |
+ -----------------
+ |               |
+PostgreSQL     Redis
+
+```
+
+---
+
+# Development Roadmap
+
+* [x] Initial Spring Boot setup
+* [x] PostgreSQL integration
+* [x] Redis infrastructure
+* [ ] URL generation service
+* [ ] Redirect service
+* [ ] Redis caching
+* [ ] Analytics system
+* [ ] Rate limiting
+* [ ] React dashboard
+* [ ] Deployment setup
