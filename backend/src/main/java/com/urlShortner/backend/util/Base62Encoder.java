@@ -2,11 +2,13 @@ package com.urlShortner.backend.util;
 
 public class Base62Encoder {
 
-    private static final String CHARACTERS =
-            "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private static final String CHARACTERS = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     public static String encode(Long value) {
-
+        if (value == 0) {
+            return "0";
+        }
+        
         StringBuilder result = new StringBuilder();
 
         while (value > 0) {

@@ -18,7 +18,6 @@ public class UrlService {
         this.urlRepository = urlRepository;
     }
 
-
     public UrlResponse createShortUrl(UrlRequest request) {
 
         Url url = Url.builder()
@@ -29,9 +28,7 @@ public class UrlService {
                 .clickCount(0L)
                 .build();
 
-
         Url savedUrl = urlRepository.save(url);
-
 
         String shortCode;
 
@@ -46,16 +43,31 @@ public class UrlService {
 
         }
 
-
         savedUrl.setShortCode(shortCode);
 
         urlRepository.save(savedUrl);
 
-
         return new UrlResponse(
                 shortCode,
                 "http://localhost:8080/" + shortCode,
-                savedUrl.getExpiresAt()
-        );
+                savedUrl.getExpiresAt());
+    }
+
+    public String redirect(String shortCode) {
+
+        Url url = urlRepository.findByShortCode(shortCode)
+                .orElseThrow(() -> new RuntimeException("URL not found"));
+
+        if (url.getExpiresAt() != null &&
+                url.getExpiresAt().isBefore(LocalDateTime.now())) {
+
+            throw new RuntimeException("URL expired");
+        }
+
+        url.setClickCount(url.getClickCount() + 1);
+
+        urlRepository.save(url);
+
+        return url.getOriginalUrl();
     }
 }
