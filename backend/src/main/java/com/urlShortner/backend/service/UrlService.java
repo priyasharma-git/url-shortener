@@ -5,6 +5,11 @@ import com.urlShortner.backend.dto.UrlResponse;
 import com.urlShortner.backend.entity.Url;
 import com.urlShortner.backend.repository.UrlRepository;
 import com.urlShortner.backend.util.Base62Encoder;
+import com.urlShortner.backend.exception.CustomAliasAlreadyExistsException;
+import com.urlShortner.backend.exception.UrlExpiredException;
+import com.urlShortner.backend.exception.UrlNotFoundException;
+
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -13,12 +18,21 @@ import java.time.LocalDateTime;
 public class UrlService {
 
     private final UrlRepository urlRepository;
+    private final RedisTemplate<String, String> redisTemplate;
 
-    public UrlService(UrlRepository urlRepository) {
+    public UrlService(UrlRepository urlRepository, RedisTemplate<String, String> redisTemplate) {
         this.urlRepository = urlRepository;
+        this.redisTemplate = redisTemplate;
     }
 
     public UrlResponse createShortUrl(UrlRequest request) {
+
+        if (request.getCustomAlias() != null &&
+                !request.getCustomAlias().isBlank() &&
+                urlRepository.existsByCustomAlias(request.getCustomAlias())) {
+
+            throw new CustomAliasAlreadyExistsException("Custom alias already exists");
+        }
 
         Url url = Url.builder()
                 .originalUrl(request.getOriginalUrl())
@@ -55,16 +69,27 @@ public class UrlService {
 
     public String redirect(String shortCode) {
 
+        String cachedUrl = redisTemplate.opsForValue()
+                .get(shortCode);
+
+        if (cachedUrl != null) {
+            return cachedUrl;
+        }
+
         Url url = urlRepository.findByShortCode(shortCode)
-                .orElseThrow(() -> new RuntimeException("URL not found"));
+                .orElseThrow(() -> new UrlNotFoundException("URL not found"));
 
         if (url.getExpiresAt() != null &&
                 url.getExpiresAt().isBefore(LocalDateTime.now())) {
 
-            throw new RuntimeException("URL expired");
+            throw new UrlExpiredException("URL expired");
         }
 
-        url.setClickCount(url.getClickCount() + 1);
+        redisTemplate.opsForValue()
+                .set(shortCode, url.getOriginalUrl());
+
+        url.setClickCount(
+                url.getClickCount() + 1);
 
         urlRepository.save(url);
 
