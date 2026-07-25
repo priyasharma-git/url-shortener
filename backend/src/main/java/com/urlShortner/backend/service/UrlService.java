@@ -14,6 +14,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class UrlService {
@@ -87,8 +89,16 @@ public class UrlService {
             throw new UrlExpiredException("URL expired");
         }
 
-        redisTemplate.opsForValue()
-                .set(shortCode, url.getOriginalUrl());
+        
+        if(url.getExpiresAt() != null) {
+            long ttlSeconds = Duration.between(LocalDateTime.now(), url.getExpiresAt()).getSeconds();
+            if(ttlSeconds > 0) {
+                redisTemplate.opsForValue().set(shortCode, url.getOriginalUrl(), ttlSeconds, TimeUnit.SECONDS);
+            }
+        } else {
+            redisTemplate.opsForValue()
+                .set(shortCode, url.getOriginalUrl(), 30, TimeUnit.DAYS);
+        }
 
         url.setClickCount(
                 url.getClickCount() + 1);
