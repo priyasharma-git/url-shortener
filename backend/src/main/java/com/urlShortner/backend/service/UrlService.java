@@ -10,6 +10,7 @@ import com.urlShortner.backend.exception.UrlExpiredException;
 import com.urlShortner.backend.exception.UrlNotFoundException;
 
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -73,6 +74,7 @@ public class UrlService {
                 .get(shortCode);
 
         if (cachedUrl != null) {
+            incrementClickCount(shortCode);
             return cachedUrl;
         }
 
@@ -94,5 +96,13 @@ public class UrlService {
         urlRepository.save(url);
 
         return url.getOriginalUrl();
+    }
+
+    @Async
+    public void incrementClickCount(String shortCode) {
+        urlRepository.findByShortCode(shortCode).ifPresent(url -> {
+            url.setClickCount(url.getClickCount() + 1);
+            urlRepository.save(url);
+        });
     }
 }
