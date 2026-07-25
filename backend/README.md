@@ -100,19 +100,3 @@ src/main/java/com/urlShortner/backend/
 ├── entity
 └── dto
 ```
-
----
-
-# Development Progress
-
-* [x] Spring Boot setup
-* [x] PostgreSQL connection
-* [x] URL entity
-* [x] Repository layer
-* [x] Basic URL creation API
-* [ ] Base62 short code generation
-* [ ] Redirect API
-* [ ] Redis caching
-* [ ] Analytics
-* [ ] Rate limiting
-* [ ] Expiration handling
