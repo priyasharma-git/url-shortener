@@ -3,7 +3,7 @@ import type { UrlRequest, UrlResponse, UrlStatsResponse } from "../types";
 
 const API_BASE_URL = "http://localhost:8080/api/v1";
 
-const api = axios.create({
+export const api = axios.create({
     baseURL: API_BASE_URL,
     headers: {
         'Content-Type': 'application/json',
@@ -20,5 +20,3 @@ export const urlService = {
         return response.data;
     },
 };
-
-export default api;
