@@ -2,6 +2,7 @@ package com.urlShortner.backend.service;
 
 import com.urlShortner.backend.dto.UrlRequest;
 import com.urlShortner.backend.dto.UrlResponse;
+import com.urlShortner.backend.dto.UrlStatsResponse;
 import com.urlShortner.backend.entity.Url;
 import com.urlShortner.backend.repository.UrlRepository;
 import com.urlShortner.backend.util.Base62Encoder;
@@ -114,5 +115,21 @@ public class UrlService {
             url.setClickCount(url.getClickCount() + 1);
             urlRepository.save(url);
         });
+    }
+
+    public UrlStatsResponse getUrlStats(String shortCode) {
+        Url url = urlRepository.findByShortCode(shortCode).orElseThrow(() -> new UrlNotFoundException("URL not found"));
+
+        boolean isExpired = url.getExpiresAt() != null && url.getExpiresAt().isBefore(LocalDateTime.now());
+
+        return new UrlStatsResponse(
+            url.getShortCode(),
+            url.getOriginalUrl(),
+            url.getClickCount(),
+            url.getCreatedAt(),
+            url.getExpiresAt(),
+            isExpired,
+            url.getCustomAlias()
+        );
     }
 }

@@ -2,6 +2,7 @@ package com.urlShortner.backend.controller;
 
 import com.urlShortner.backend.dto.UrlRequest;
 import com.urlShortner.backend.dto.UrlResponse;
+import com.urlShortner.backend.dto.UrlStatsResponse;
 import com.urlShortner.backend.service.UrlService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
@@ -23,5 +24,12 @@ public class UrlController {
             @Valid @RequestBody UrlRequest request
     ) {
         return urlService.createShortUrl(request);
+    }
+
+    @GetMapping("/{shortCode}/stats")
+    public UrlStatsResponse getUrlStats(
+        @PathVariable String shortCode
+    ) {
+        return urlService.getUrlStats(shortCode);
     }
 }
