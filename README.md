@@ -197,9 +197,9 @@ PostgreSQL     Redis
 * [x] Base62 short code generation
 * [x] Redirect service
 * [x] Redis caching
-* [ ] Analytics system
-* [ ] Rate limiting
-* [ ] Expiration handling
+* [x] Analytics system
+* [x] Rate limiting
+* [x] Expiration handling
 
 ## Frontend
 
