@@ -3,6 +3,7 @@ package com.urlShortner.backend.service;
 import com.urlShortner.backend.dto.UrlRequest;
 import com.urlShortner.backend.dto.UrlResponse;
 import com.urlShortner.backend.dto.UrlStatsResponse;
+import com.urlShortner.backend.dto.UrlSummaryResponse;
 import com.urlShortner.backend.entity.Url;
 import com.urlShortner.backend.repository.UrlRepository;
 import com.urlShortner.backend.util.Base62Encoder;
@@ -16,7 +17,10 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.Duration;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import org.springframework.data.domain.Sort;
 
 @Service
 public class UrlService {
@@ -127,5 +131,18 @@ public class UrlService {
             isExpired,
             url.getCustomAlias()
         );
+    }
+
+    public List<UrlSummaryResponse> getAllUrlsForAdmin() {
+        return urlRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"))
+                .stream()
+                .map(url -> new UrlSummaryResponse(
+                        url.getShortCode(),
+                        url.getOriginalUrl(),
+                        url.getClickCount(),
+                        url.getCreatedAt(),
+                        url.getExpiresAt(),
+                        url.getCustomAlias()))
+                .toList();
     }
 }

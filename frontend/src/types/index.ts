@@ -19,6 +19,15 @@ export type UrlStatsResponse = {
     customAlias: string | null,
 }
 
+export type UrlListItem = {
+    shortCode: string,
+    originalUrl: string,
+    clickCount: number,
+    createdAt: string,
+    expiresAt: string | null,
+    customAlias: string | null,
+}
+
 export type ErrorResponse = {
     timestamp: string,
     status: number,

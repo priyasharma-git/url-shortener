@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { UrlShortener, UrlStats, UrlResult } from './components';
-import type { UrlResponse } from './types';
+import { urlService } from './services/api';
+import type { UrlListItem, UrlResponse } from './types';
 
 type View = 'landing' | 'create' | 'admin' | 'stats';
 
@@ -12,7 +13,10 @@ export const App = () => {
   const [adminPassword, setAdminPassword] = useState('');
   const [statsLookupCode, setStatsLookupCode] = useState('');
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
+  const [adminUrls, setAdminUrls] = useState<UrlListItem[]>([]);
+  const [adminLoading, setAdminLoading] = useState(false);
   const [message, setMessage] = useState('');
+  const [statsReturnView, setStatsReturnView] = useState<'create' | 'admin'>('create');
 
   const resetFlow = () => {
     setCurrentView('landing');
@@ -22,7 +26,10 @@ export const App = () => {
     setAdminUsername('');
     setAdminPassword('');
     setIsAdminAuthenticated(false);
+    setAdminUrls([]);
+    setAdminLoading(false);
     setMessage('');
+    setStatsReturnView('create');
   };
 
   const handleUrlCreated = (response: UrlResponse) => {
@@ -39,6 +46,7 @@ export const App = () => {
 
   const handleGoToAdmin = () => {
     setCurrentView('admin');
+    setStatsReturnView('admin');
     setMessage('');
   };
 
@@ -49,6 +57,32 @@ export const App = () => {
     setStatsLookupCode('');
     setMessage('');
   };
+
+  const handleBackToAdmin = () => {
+    setCurrentView('admin');
+    setStatsShortCode('');
+    setMessage('');
+  };
+
+  const loadAdminUrls = async () => {
+    setAdminLoading(true);
+    setMessage('');
+
+    try {
+      const data = await urlService.getAllUrlsForAdmin();
+      setAdminUrls(data);
+    } catch (error: any) {
+      setMessage(error.response?.data?.message || 'Unable to load analytics records right now.');
+    } finally {
+      setAdminLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isAdminAuthenticated && currentView === 'admin') {
+      void loadAdminUrls();
+    }
+  }, [isAdminAuthenticated, currentView]);
 
   const handleAdminSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -62,16 +96,9 @@ export const App = () => {
     }
   };
 
-  const handleStatsLookup = (event: React.FormEvent) => {
-    event.preventDefault();
-    const trimmedCode = statsLookupCode.trim();
-
-    if (!trimmedCode) {
-      setMessage('Please enter a short code to look up its stats.');
-      return;
-    }
-
-    setStatsShortCode(trimmedCode);
+  const handleViewStatsFromAdmin = (shortCode: string) => {
+    setStatsShortCode(shortCode);
+    setStatsReturnView('admin');
     setCurrentView('stats');
     setMessage('');
   };
@@ -186,30 +213,53 @@ export const App = () => {
                   </div>
 
                   <button type='submit' className='btn-primary w-full'>
-                    Continue to stats
+                    Continue to analytics
                   </button>
                 </form>
               ) : (
-                <form onSubmit={handleStatsLookup} className='space-y-4'>
-                  <div>
-                    <label htmlFor='statsLookupCode' className='mb-2 block text-left text-sm font-semibold text-gray-700'>
-                      Short code
-                    </label>
-                    <input
-                      id='statsLookupCode'
-                      type='text'
-                      value={statsLookupCode}
-                      onChange={(event) => setStatsLookupCode(event.target.value)}
-                      className='input-field'
-                      placeholder='abc123'
-                      required
-                    />
+                <div className='space-y-4'>
+                  <div className='rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600'>
+                    Select a shortened URL below to inspect its analytics in detail.
                   </div>
 
-                  <button type='submit' className='btn-primary w-full'>
-                    View statistics
-                  </button>
-                </form>
+                  {adminLoading ? (
+                    <div className='flex items-center justify-center py-6 text-sm text-gray-600'>
+                      <svg className='mr-3 h-5 w-5 animate-spin text-primary-600' viewBox='0 0 24 24' fill='none'>
+                        <circle className='opacity-25' cx='12' cy='12' r='10' stroke='currentColor' strokeWidth='4' />
+                        <path className='opacity-75' fill='currentColor' d='M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z' />
+                      </svg>
+                      Loading analytics list...
+                    </div>
+                  ) : adminUrls.length === 0 ? (
+                    <div className='rounded-xl border border-dashed border-slate-300 p-6 text-center text-sm text-gray-500'>
+                      No shortened URLs have been created yet.
+                    </div>
+                  ) : (
+                    <div className='space-y-3'>
+                      {adminUrls.map((item) => (
+                        <div key={item.shortCode} className='rounded-2xl border border-slate-200 bg-white p-4 shadow-sm'>
+                          <div className='flex flex-col gap-3 md:flex-row md:items-start md:justify-between'>
+                            <div className='min-w-0'>
+                              <div className='text-sm font-semibold text-primary-700'>/{item.shortCode}</div>
+                              <p className='mt-2 break-all text-sm text-gray-700'>{item.originalUrl}</p>
+                              <div className='mt-3 flex flex-wrap gap-3 text-xs text-gray-500'>
+                                <span>Clicks: {item.clickCount}</span>
+                                <span>Created: {new Date(item.createdAt).toLocaleDateString()}</span>
+                              </div>
+                            </div>
+                            <button
+                              type='button'
+                              onClick={() => handleViewStatsFromAdmin(item.shortCode)}
+                              className='rounded-lg border border-primary-200 bg-primary-50 px-3 py-2 text-sm font-semibold text-primary-700 transition hover:bg-primary-100'
+                            >
+                              View more
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               )}
 
               <div className='mt-5 rounded-lg border border-indigo-200 bg-indigo-50 px-4 py-3 text-sm text-indigo-700'>
@@ -219,7 +269,7 @@ export const App = () => {
           )}
 
           {currentView === 'stats' && (
-            <UrlStats shortCode={statsShortCode} onClose={handleBackToCreate} />
+            <UrlStats shortCode={statsShortCode} onClose={statsReturnView === 'admin' ? handleBackToAdmin : handleBackToCreate} />
           )}
         </main>
 
