@@ -18,6 +18,13 @@ export const UrlShortener = ({ onUrlCreated }: UrlShortenerProps) => {
         setError('');
 
         try {
+            const data: any = {
+                originalUrl,
+            };
+            const trimmedAlias = customAlias.trim();
+            if (trimmedAlias) {
+                data.customAlias = trimmedAlias;
+            }
             const response = await urlService.createShortUrl({ originalUrl, customAlias });
             onUrlCreated(response);
             setOriginalUrl('');

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { UrlShortener, UrlStats } from './components';
+import { UrlShortener, UrlStats, UrlResult } from './components';
 import type { UrlResponse } from './types';
 
 type View = 'create' | 'stats';
@@ -19,6 +19,11 @@ export const App = () => {
     setStatsShortCode('');
   }
 
+  const handleViewStats = (shortCode: string) => {
+    setStatsShortCode(shortCode);
+    setCurrentView('stats');
+  }
+
   return (
     <div className='min-h-screen py-12 px-4'>
       <div className='container mx-auto'>
@@ -36,7 +41,7 @@ export const App = () => {
             <>
               <UrlShortener onUrlCreated={handleUrlCreated} />
               {urlResult && (
-                <div>Hi</div>
+                <UrlResult result={urlResult} onViewStats={handleViewStats} />
               )}
             </>
           ): (

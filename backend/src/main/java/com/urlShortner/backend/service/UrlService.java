@@ -30,17 +30,18 @@ public class UrlService {
     }
 
     public UrlResponse createShortUrl(UrlRequest request) {
-
-        if (request.getCustomAlias() != null &&
-                !request.getCustomAlias().isBlank() &&
-                urlRepository.existsByCustomAlias(request.getCustomAlias())) {
-
+        String customAlias = request.getCustomAlias();
+        if(customAlias!=null && customAlias.isBlank()) {
+            customAlias = null;
+        }
+        
+        if (customAlias !=null && urlRepository.existsByCustomAlias(customAlias)) {
             throw new CustomAliasAlreadyExistsException("Custom alias already exists");
         }
 
         Url url = Url.builder()
                 .originalUrl(request.getOriginalUrl())
-                .customAlias(request.getCustomAlias())
+                .customAlias(customAlias)
                 .createdAt(LocalDateTime.now())
                 .expiresAt(LocalDateTime.now().plusDays(30))
                 .clickCount(0L)
@@ -50,15 +51,10 @@ public class UrlService {
 
         String shortCode;
 
-        if (request.getCustomAlias() != null &&
-                !request.getCustomAlias().isBlank()) {
-
-            shortCode = request.getCustomAlias();
-
+        if (customAlias != null) {
+            shortCode = customAlias;
         } else {
-
             shortCode = Base62Encoder.encode(savedUrl.getId());
-
         }
 
         savedUrl.setShortCode(shortCode);
