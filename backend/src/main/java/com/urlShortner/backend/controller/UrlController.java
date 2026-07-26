@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/urls")
-@CrossOrigin(origins = "*")
 public class UrlController {
 
     private final UrlService urlService;
