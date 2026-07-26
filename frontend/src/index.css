@@ -14,7 +14,7 @@
 
 @layer base {
   body {
-    @apply min-h-screen m-0 bg-[#f5f5f3] text-slate-900;
+    @apply min-h-screen m-0 bg-[#f5f5f3] text-cyan-900;
   }
 
   * {
@@ -28,19 +28,19 @@
 
 @layer components {
   .btn-primary {
-    @apply inline-flex items-center justify-center rounded-xl border border-slate-900 bg-slate-900 px-5 py-3 font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-black disabled:cursor-not-allowed disabled:opacity-60;
+    @apply inline-flex items-center justify-center rounded-xl border border-cyan-900 bg-cyan-900 px-5 py-3 font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-black disabled:cursor-not-allowed disabled:opacity-60;
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 font-semibold text-slate-700 transition-all duration-200 hover:border-slate-900 hover:text-slate-900;
+    @apply inline-flex items-center justify-center rounded-xl border border-cyan-300 bg-white px-5 py-3 font-semibold text-cyan-700 transition-all duration-200 hover:border-cyan-900 hover:text-cyan-900;
   }
 
   .input-field {
-    @apply w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition-all duration-200 placeholder:text-slate-400 focus:border-slate-900 focus:ring-2 focus:ring-slate-200;
+    @apply w-full rounded-xl border border-cyan-300 bg-white px-4 py-3 text-sm text-cyan-800 outline-none transition-all duration-200 placeholder:text-cyan-400 focus:border-cyan-900 focus:ring-2 focus:ring-cyan-200;
   }
 
   .card {
-    @apply rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur;
+    @apply rounded-3xl border border-cyan-200 bg-white/90 p-6 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur;
   }
 
   .app-shell {
@@ -53,7 +53,7 @@
   }
 
   .hero-title {
-    @apply mb-3 text-4xl font-black tracking-[-0.03em] text-slate-950 sm:text-5xl;
+    @apply mb-3 text-4xl font-black tracking-[-0.03em] text-cyan-950 sm:text-5xl;
   }
 
   .hero-title--accent {
@@ -64,11 +64,11 @@
   }
 
   .hero-subtitle {
-    @apply mx-auto max-w-2xl text-lg text-slate-600;
+    @apply mx-auto max-w-2xl text-lg text-cyan-600;
   }
 
   .back-link {
-    @apply inline-flex items-center text-sm font-semibold text-slate-700 transition-colors duration-200 hover:text-slate-950;
+    @apply inline-flex items-center text-sm font-semibold text-cyan-700 transition-colors duration-200 hover:text-cyan-950;
   }
 
   .choice-grid {
@@ -76,15 +76,15 @@
   }
 
   .choice-card {
-    @apply rounded-[1.75rem] border border-slate-200 bg-white p-8 text-left shadow-[0_20px_60px_rgba(15,23,42,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_28px_70px_rgba(15,23,42,0.12)];
+    @apply rounded-[1.75rem] border border-cyan-200 bg-white p-8 text-left shadow-[0_20px_60px_rgba(15,23,42,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_28px_70px_rgba(15,23,42,0.12)];
   }
 
   .choice-card--dark {
-    @apply border-slate-950 bg-slate-950 text-white;
+    @apply border-cyan-950 bg-cyan-950 text-white;
   }
 
   .choice-card__icon {
-    @apply mb-5 inline-flex rounded-2xl border border-slate-200 bg-slate-100 p-3 text-slate-900;
+    @apply mb-5 inline-flex rounded-2xl border border-cyan-200 bg-cyan-100 p-3 text-cyan-900;
   }
 
   .choice-card--dark .choice-card__icon {
@@ -92,7 +92,7 @@
   }
 
   .choice-card__title {
-    @apply text-2xl font-semibold text-slate-900;
+    @apply text-2xl font-semibold text-cyan-900;
   }
 
   .choice-card--dark .choice-card__title {
@@ -100,15 +100,15 @@
   }
 
   .choice-card__text {
-    @apply mt-3 text-sm leading-6 text-slate-600;
+    @apply mt-3 text-sm leading-6 text-cyan-600;
   }
 
   .choice-card--dark .choice-card__text {
-    @apply text-slate-300;
+    @apply text-cyan-300;
   }
 
   .panel {
-    @apply rounded-[1.75rem] border border-slate-200 bg-white/90 p-6 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur;
+    @apply rounded-[1.75rem] border border-cyan-200 bg-white/90 p-6 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur;
   }
 
   .panel--wide {
@@ -128,23 +128,23 @@
   }
 
   .panel__title {
-    @apply text-2xl font-semibold text-slate-950;
+    @apply text-2xl font-semibold text-cyan-950;
   }
 
   .panel__subtitle {
-    @apply mt-2 text-sm text-slate-600;
+    @apply mt-2 text-sm text-cyan-600;
   }
 
   .field-label {
-    @apply mb-2 block text-left text-sm font-semibold text-slate-700;
+    @apply mb-2 block text-left text-sm font-semibold text-cyan-700;
   }
 
   .helper-text {
-    @apply mt-2 text-xs text-slate-500;
+    @apply mt-2 text-xs text-cyan-500;
   }
 
   .message-box {
-    @apply mb-4 rounded-2xl border border-slate-200 bg-slate-100 px-4 py-3 text-sm text-slate-700;
+    @apply mb-4 rounded-2xl border border-cyan-200 bg-cyan-100 px-4 py-3 text-sm text-cyan-700;
   }
 
   .message-box--error {
@@ -152,31 +152,31 @@
   }
 
   .admin-list-item {
-    @apply rounded-2xl border border-slate-200 bg-[#fcfcfb] p-4 shadow-sm;
+    @apply rounded-2xl border border-cyan-200 bg-[#fcfcfb] p-4 shadow-sm;
   }
 
   .admin-list-item__code {
-    @apply text-sm font-semibold text-slate-900;
+    @apply text-sm font-semibold text-cyan-900;
   }
 
   .admin-list-item__meta {
-    @apply mt-3 flex flex-wrap gap-3 text-xs text-slate-500;
+    @apply mt-3 flex flex-wrap gap-3 text-xs text-cyan-500;
   }
 
   .admin-list-item__button {
-    @apply rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 transition-all duration-200 hover:border-slate-950 hover:text-slate-950;
+    @apply rounded-xl border border-cyan-300 bg-white px-3 py-2 text-sm font-semibold text-cyan-700 transition-all duration-200 hover:border-cyan-950 hover:text-cyan-950;
   }
 
   .result-box {
-    @apply mb-4 rounded-2xl border border-slate-200 bg-[#f8f8f6] p-4;
+    @apply mb-4 rounded-2xl border border-cyan-200 bg-[#f8f8f6] p-4;
   }
 
   .result-meta {
-    @apply flex flex-col gap-3 text-sm text-slate-600 sm:flex-row sm:items-center sm:justify-between;
+    @apply flex flex-col gap-3 text-sm text-cyan-600 sm:flex-row sm:items-center sm:justify-between;
   }
 
   .copy-button {
-    @apply rounded-xl border border-slate-900 bg-slate-900 px-4 py-2.5 font-semibold text-white transition-all duration-200 hover:bg-black;
+    @apply rounded-xl border border-cyan-900 bg-cyan-900 px-4 py-2.5 font-semibold text-white transition-all duration-200 hover:bg-black;
   }
 
   .copy-button--copied {
@@ -184,7 +184,7 @@
   }
 
   .stats-badge {
-    @apply mb-6 inline-flex items-center rounded-full border border-slate-200 bg-slate-100 px-3.5 py-2 text-sm font-semibold text-slate-700;
+    @apply mb-6 inline-flex items-center rounded-full border border-cyan-200 bg-cyan-100 px-3.5 py-2 text-sm font-semibold text-cyan-700;
   }
 
   .stats-badge--expired {
@@ -196,34 +196,34 @@
   }
 
   .metric-card {
-    @apply rounded-2xl border border-slate-200 bg-[#f8f8f6] p-5;
+    @apply rounded-2xl border border-cyan-200 bg-[#f8f8f6] p-5;
   }
 
   .metric-card__label {
-    @apply mb-1 text-sm font-semibold text-slate-600;
+    @apply mb-1 text-sm font-semibold text-cyan-600;
   }
 
   .metric-card__value {
-    @apply text-2xl font-semibold text-slate-950;
+    @apply text-2xl font-semibold text-cyan-950;
   }
 
   .detail-block {
-    @apply mb-6 rounded-2xl border border-slate-200 bg-[#f8f8f6] p-5;
+    @apply mb-6 rounded-2xl border border-cyan-200 bg-[#f8f8f6] p-5;
   }
 
   .detail-block__label {
-    @apply mb-2 text-sm font-semibold text-slate-600;
+    @apply mb-2 text-sm font-semibold text-cyan-600;
   }
 
   .detail-link {
-    @apply break-all font-medium text-slate-900 underline decoration-slate-300 underline-offset-4 transition-colors duration-200 hover:text-slate-600;
+    @apply break-all font-medium text-cyan-900 underline decoration-cyan-300 underline-offset-4 transition-colors duration-200 hover:text-cyan-600;
   }
 
   .footer-text {
-    @apply mt-16 text-center text-sm text-slate-500;
+    @apply mt-16 text-center text-sm text-cyan-500;
   }
 
   .footer-text strong {
-    @apply text-slate-700;
+    @apply text-cyan-700;
   }
 }
