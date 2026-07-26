@@ -29,46 +29,43 @@ export const UrlResult = ({ result, onViewStats, showStatsLink = false }: UrlRes
     }
 
     return (
-        <div className="card max-w-2xl mx-auto bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 animate-slide-up">
-            <div className="flex items-center gap-2 mb-4">
-                <h3 className='text-xl font-bold text-gray-800'>URL Shortened Successfully</h3>
+        <div className="panel panel--tight mt-6">
+            <div className="mb-4">
+                <h3 className='panel__title'>URL Shortened Successfully</h3>
             </div>
 
-            <div className="bg-white rounded-lg p-4 mb-4">
-                <label className="block text-sm font-semibold text-gray-600 mb-2">
+            <div className="result-box">
+                <label className="field-label">
                     Your Short URL
                 </label>
 
-                <div className="flex gap-2">
+                <div className="flex flex-col gap-3 sm:flex-row">
                     <input
                         type="text"
                         value={result.shortUrl}
                         readOnly
-                        className="input-field flex-1 bg-gray-50 font-mono text-primary-600 font-semibold"
+                        className="input-field flex-1 bg-white font-mono text-slate-900"
                     />
 
                     <button
                         onClick={handleCopy}
-                        className={`px-6 py-3 rounded-lg font-semibold transition-all duration-200 ${copied
-                            ? "bg-green-500 text-white"
-                            : "bg-primary-600 hover:bg-primary-700 text-white"
-                            }`}
+                        className={`copy-button ${copied ? 'copy-button--copied' : ''}`}
                     >
                         {copied ? "Copied!" : "Copy"}
                     </button>
                 </div>
             </div>
 
-            <div className="flex items-center justify-between text-sm text-gray-600">
+            <div className="result-meta">
                 <div>
-                    <span className="font-semibold">Expires:</span>{" "}
+                    <span className="font-semibold text-slate-800">Expires:</span>{" "}
                     {formatDate(result.expiresAt)}
                 </div>
 
                 {showStatsLink && onViewStats && (
                     <button
                         onClick={() => onViewStats(result.shortCode)}
-                        className="text-primary-600 hover:text-primary-700 font-semibold hover:underline"
+                        className="text-sm font-semibold text-slate-700 underline decoration-slate-300 underline-offset-4 transition-colors duration-200 hover:text-slate-950"
                     >
                         View Statistics
                     </button>

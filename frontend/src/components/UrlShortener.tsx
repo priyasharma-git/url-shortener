@@ -37,13 +37,13 @@ export const UrlShortener = ({ onUrlCreated }: UrlShortenerProps) => {
     };
 
     return (
-        <div className="card max-w-2xl mx-auto">
-            <h2 className='text-3xl font-bold text-gray-800 mb-2'>Shorten Your URL</h2>
-            <p className='text-gray-600 mb-6'>Create short, memorable links in seconds</p>
+        <div className="panel panel--tight">
+            <h2 className='panel__title'>Shorten Your URL</h2>
+            <p className='panel__subtitle mb-6'>Create a polished short link in seconds.</p>
 
             <form onSubmit={handleSubmit} className='space-y-4'>
                 <div>
-                    <label htmlFor="originalUrl" className="block text-left text-sm font-semibold text-gray-700 mb-2">
+                    <label htmlFor="originalUrl" className="field-label">
                         Original URL
                     </label>
                     <input
@@ -58,9 +58,9 @@ export const UrlShortener = ({ onUrlCreated }: UrlShortenerProps) => {
                 </div>
 
                 <div>
-                    <label htmlFor="customAlias" className='block text-left text-sm font-semibold text-gray=700 mb-2'>
+                    <label htmlFor="customAlias" className='field-label'>
                         Custom Alias
-                        <span className='text-gray-400 font-normal'>
+                        <span className='ml-2 text-sm font-normal text-slate-400'>
                             (Optional - max 50 chars)
                         </span>
                     </label>
@@ -74,14 +74,14 @@ export const UrlShortener = ({ onUrlCreated }: UrlShortenerProps) => {
                         className="input-field"
                     />
                     {customAlias && (
-                        <p className='text-xs text-gray-500 mt-1'>
+                        <p className='helper-text'>
                             Preview: localhost:8080/{customAlias}
                         </p>
                     )}
                 </div>
 
                 {error && (
-                    <div className='bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg'>
+                    <div className='message-box message-box--error'>
                         {error}
                     </div>
                 )}
