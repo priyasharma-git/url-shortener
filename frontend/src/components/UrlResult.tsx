@@ -3,10 +3,11 @@ import type { UrlResponse } from '../types';
 
 type UrlResultProps = {
     result: UrlResponse;
-    onViewStats: (shortCode: string) => void;
+    onViewStats?: (shortCode: string) => void;
+    showStatsLink?: boolean;
 }
 
-export const UrlResult = ({ result, onViewStats }: UrlResultProps) => {
+export const UrlResult = ({ result, onViewStats, showStatsLink = false }: UrlResultProps) => {
     const [copied, setCopied] = useState(false);
 
     const handleCopy = async () => {
@@ -64,12 +65,14 @@ export const UrlResult = ({ result, onViewStats }: UrlResultProps) => {
                     {formatDate(result.expiresAt)}
                 </div>
 
-                <button
-                    onClick={() => onViewStats(result.shortCode)}
-                    className="text-primary-600 hover:text-primary-700 font-semibold hover:underline"
-                >
-                    View Statistics
-                </button>
+                {showStatsLink && onViewStats && (
+                    <button
+                        onClick={() => onViewStats(result.shortCode)}
+                        className="text-primary-600 hover:text-primary-700 font-semibold hover:underline"
+                    >
+                        View Statistics
+                    </button>
+                )}
             </div>
         </div>
     );
