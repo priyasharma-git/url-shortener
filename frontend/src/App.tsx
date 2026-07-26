@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { UrlShortener } from './components/UrlShortener';
+import { UrlShortener, UrlStats } from './components';
 import type { UrlResponse } from './types';
 
 type View = 'create' | 'stats';
@@ -13,6 +13,12 @@ export const App = () => {
     setUrlResult(response);
   };
 
+  const handleBackToCreate = () => {
+    setCurrentView('create');
+    setUrlResult(null);
+    setStatsShortCode('');
+  }
+
   return (
     <div className='min-h-screen py-12 px-4'>
       <div className='container mx-auto'>
@@ -21,7 +27,7 @@ export const App = () => {
             URL Shortener
           </h1>
           <p className='text-gray-600 text-lg'>
-            Fast, reliable, and feature-rick URL shortening service
+            Fast, reliable, and feature-rich URL shortening service
           </p>
         </header>
 
@@ -34,9 +40,16 @@ export const App = () => {
               )}
             </>
           ): (
-            <></>
+            < UrlStats shortCode={statsShortCode} onClose={handleBackToCreate} />
           )}
         </main>
+
+        <footer className='text-center mt-16 text-gray-500 text-sm'>
+          <p>Built with Spring Boot, React, PostgreSQL and Redis</p>
+          <p className='mt-2'>
+            Supports custom aliases • Rate limiting • Analytics • Redis caching
+          </p>
+        </footer>
       </div>
     </div>
   )
