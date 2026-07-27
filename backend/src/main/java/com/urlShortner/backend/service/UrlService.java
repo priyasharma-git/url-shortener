@@ -16,6 +16,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.time.LocalDateTime;
 import java.time.Duration;
 import java.util.List;
@@ -25,6 +28,8 @@ import org.springframework.data.domain.Sort;
 
 @Service
 public class UrlService {
+
+    private static final Logger log = LoggerFactory.getLogger(UrlService.class);
 
     private final UrlRepository urlRepository;
     private final RedisTemplate<String, String> redisTemplate;
@@ -71,7 +76,7 @@ public class UrlService {
                     "http://localhost:8080/" + shortCode,
                     savedUrl.getExpiresAt());
         } catch (DataIntegrityViolationException e) {
-            if(customAlias != null) {
+            if (customAlias != null) {
                 throw new CustomAliasAlreadyExistsException("Custom alias already exists");
             }
             throw e;
@@ -81,12 +86,16 @@ public class UrlService {
 
     public String redirect(String shortCode) {
 
-        String cachedUrl = redisTemplate.opsForValue()
-                .get(shortCode);
+        try {
+            String cachedUrl = redisTemplate.opsForValue()
+                    .get(shortCode);
 
-        if (cachedUrl != null) {
-            incrementClickCount(shortCode);
-            return cachedUrl;
+            if (cachedUrl != null) {
+                incrementClickCount(shortCode);
+                return cachedUrl;
+            }
+        } catch (Exception e) {
+            log.warn("Redis is down or not reachable. Proceeding without cache. Error: {}", e.getMessage());
         }
 
         Url url = urlRepository.findByShortCode(shortCode)
@@ -98,19 +107,21 @@ public class UrlService {
             throw new UrlExpiredException("URL expired");
         }
 
-        if (url.getExpiresAt() != null) {
-            long ttlSeconds = Duration.between(LocalDateTime.now(), url.getExpiresAt()).getSeconds();
-            if (ttlSeconds > 0) {
-                redisTemplate.opsForValue().set(shortCode, url.getOriginalUrl(), ttlSeconds, TimeUnit.SECONDS);
+        try {
+            if (url.getExpiresAt() != null) {
+                long ttlSeconds = Duration.between(LocalDateTime.now(), url.getExpiresAt()).getSeconds();
+                if (ttlSeconds > 0) {
+                    redisTemplate.opsForValue().set(shortCode, url.getOriginalUrl(), ttlSeconds, TimeUnit.SECONDS);
+                }
+            } else {
+                redisTemplate.opsForValue()
+                        .set(shortCode, url.getOriginalUrl(), 30, TimeUnit.DAYS);
             }
-        } else {
-            redisTemplate.opsForValue()
-                    .set(shortCode, url.getOriginalUrl(), 30, TimeUnit.DAYS);
+        } catch (Exception e) {
+            log.warn("Redis is down or not reachable. Proceeding without cache. Error: {}", e.getMessage());
         }
 
         urlRepository.incrementClickCount(shortCode);
-
-        urlRepository.save(url);
 
         return url.getOriginalUrl();
     }
