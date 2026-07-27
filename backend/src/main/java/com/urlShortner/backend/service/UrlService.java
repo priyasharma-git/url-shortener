@@ -108,8 +108,7 @@ public class UrlService {
                     .set(shortCode, url.getOriginalUrl(), 30, TimeUnit.DAYS);
         }
 
-        url.setClickCount(
-                url.getClickCount() + 1);
+        urlRepository.incrementClickCount(shortCode);
 
         urlRepository.save(url);
 
@@ -118,10 +117,7 @@ public class UrlService {
 
     @Async
     public void incrementClickCount(String shortCode) {
-        urlRepository.findByShortCode(shortCode).ifPresent(url -> {
-            url.setClickCount(url.getClickCount() + 1);
-            urlRepository.save(url);
-        });
+        urlRepository.incrementClickCount(shortCode);
     }
 
     public UrlStatsResponse getUrlStats(String shortCode) {
