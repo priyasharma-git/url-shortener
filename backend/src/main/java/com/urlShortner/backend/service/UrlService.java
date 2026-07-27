@@ -11,6 +11,7 @@ import com.urlShortner.backend.exception.CustomAliasAlreadyExistsException;
 import com.urlShortner.backend.exception.UrlExpiredException;
 import com.urlShortner.backend.exception.UrlNotFoundException;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -35,40 +36,47 @@ public class UrlService {
 
     public UrlResponse createShortUrl(UrlRequest request) {
         String customAlias = request.getCustomAlias();
-        if(customAlias!=null && customAlias.isBlank()) {
+        if (customAlias != null && customAlias.isBlank()) {
             customAlias = null;
         }
-        
-        if (customAlias !=null && urlRepository.existsByCustomAlias(customAlias)) {
+
+        if (customAlias != null && urlRepository.existsByCustomAlias(customAlias)) {
             throw new CustomAliasAlreadyExistsException("Custom alias already exists");
         }
 
-        Url url = Url.builder()
-                .originalUrl(request.getOriginalUrl())
-                .customAlias(customAlias)
-                .createdAt(LocalDateTime.now())
-                .expiresAt(LocalDateTime.now().plusDays(30))
-                .clickCount(0L)
-                .build();
+        try {
+            Url url = Url.builder()
+                    .originalUrl(request.getOriginalUrl())
+                    .customAlias(customAlias)
+                    .createdAt(LocalDateTime.now())
+                    .expiresAt(LocalDateTime.now().plusDays(30))
+                    .clickCount(0L)
+                    .build();
 
-        Url savedUrl = urlRepository.save(url);
+            Url savedUrl = urlRepository.save(url);
+            String shortCode;
 
-        String shortCode;
+            if (customAlias != null) {
+                shortCode = customAlias;
+            } else {
+                shortCode = Base62Encoder.encode(savedUrl.getId());
+            }
 
-        if (customAlias != null) {
-            shortCode = customAlias;
-        } else {
-            shortCode = Base62Encoder.encode(savedUrl.getId());
+            savedUrl.setShortCode(shortCode);
+
+            urlRepository.save(savedUrl);
+
+            return new UrlResponse(
+                    shortCode,
+                    "http://localhost:8080/" + shortCode,
+                    savedUrl.getExpiresAt());
+        } catch (DataIntegrityViolationException e) {
+            if(customAlias != null) {
+                throw new CustomAliasAlreadyExistsException("Custom alias already exists");
+            }
+            throw e;
         }
 
-        savedUrl.setShortCode(shortCode);
-
-        urlRepository.save(savedUrl);
-
-        return new UrlResponse(
-                shortCode,
-                "http://localhost:8080/" + shortCode,
-                savedUrl.getExpiresAt());
     }
 
     public String redirect(String shortCode) {
@@ -90,15 +98,14 @@ public class UrlService {
             throw new UrlExpiredException("URL expired");
         }
 
-        
-        if(url.getExpiresAt() != null) {
+        if (url.getExpiresAt() != null) {
             long ttlSeconds = Duration.between(LocalDateTime.now(), url.getExpiresAt()).getSeconds();
-            if(ttlSeconds > 0) {
+            if (ttlSeconds > 0) {
                 redisTemplate.opsForValue().set(shortCode, url.getOriginalUrl(), ttlSeconds, TimeUnit.SECONDS);
             }
         } else {
             redisTemplate.opsForValue()
-                .set(shortCode, url.getOriginalUrl(), 30, TimeUnit.DAYS);
+                    .set(shortCode, url.getOriginalUrl(), 30, TimeUnit.DAYS);
         }
 
         url.setClickCount(
@@ -123,14 +130,13 @@ public class UrlService {
         boolean isExpired = url.getExpiresAt() != null && url.getExpiresAt().isBefore(LocalDateTime.now());
 
         return new UrlStatsResponse(
-            url.getShortCode(),
-            url.getOriginalUrl(),
-            url.getClickCount(),
-            url.getCreatedAt(),
-            url.getExpiresAt(),
-            isExpired,
-            url.getCustomAlias()
-        );
+                url.getShortCode(),
+                url.getOriginalUrl(),
+                url.getClickCount(),
+                url.getCreatedAt(),
+                url.getExpiresAt(),
+                isExpired,
+                url.getCustomAlias());
     }
 
     public List<UrlSummaryResponse> getAllUrlsForAdmin() {

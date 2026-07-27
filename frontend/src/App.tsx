@@ -111,7 +111,7 @@ export const App = () => {
             <span className='hero-title--accent'>URL Shortener</span>
           </h1>
           <p className='hero-subtitle'>
-            A refined platform for creating concise links and reviewing their analytics with confidence.
+            A platform for creating concise links and reviewing their analytics.
           </p>
         </header>
 
