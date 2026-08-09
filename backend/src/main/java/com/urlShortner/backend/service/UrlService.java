@@ -46,10 +46,8 @@ public class UrlService {
             throw new CustomAliasAlreadyExistsException("Custom alias already exists");
         }
 
-        LocalDateTime expiresAt = null;
-        if(request.getExpirationDays() != null) {
-            expiresAt = LocalDateTime.now().plusDays(request.getExpirationDays());
-        }
+        int expirationDays = request.getExpirationDays() != null ? request.getExpirationDays() : 30;
+        LocalDateTime expiresAt = LocalDateTime.now().plusDays(expirationDays);
 
         try {
             Url url = Url.builder()

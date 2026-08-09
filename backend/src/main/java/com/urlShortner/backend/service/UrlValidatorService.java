@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Service
 public class UrlValidatorService {
     public void validateNotExpired(Url url) {
-        if (url.getExpiresAt() != null && url.getExpiresAt().isBefore(LocalDateTime.now())) {
+        if (url.getExpiresAt().isBefore(LocalDateTime.now())) {
             throw new UrlExpiredException("URL expired");
         }
     }

@@ -89,7 +89,7 @@ export const UrlShortener = ({ onUrlCreated }: UrlShortenerProps) => {
                     <label htmlFor="expirationDays" className='field-label'>
                         Expiration (Days)
                         <span className='ml-2 text-sm font-normal text-slate-400'>
-                            (Optional)
+                            (Default to 30)
                         </span>
                     </label>
                     <input
@@ -103,7 +103,7 @@ export const UrlShortener = ({ onUrlCreated }: UrlShortenerProps) => {
                         className="input-field"
                     />
                     <p className='helper-text'>
-                        Enter number of days (1-365) or leave empty for a permanent link
+                        Defaults to 30 days if left empty. Must be between 1 and 365 days.
                     </p>
                 </div>
 
