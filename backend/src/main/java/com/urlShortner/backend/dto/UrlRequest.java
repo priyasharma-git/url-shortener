@@ -1,6 +1,7 @@
 package com.urlShortner.backend.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import org.hibernate.validator.constraints.URL;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
@@ -8,6 +9,8 @@ import lombok.*;
 @Setter
 public class UrlRequest {
     @NotBlank
+    @URL(message = "Invalid URL format")
+    @Size(max=2048, message = "URL too long")
     private String originalUrl;
     
     @Size(max = 50, message = "Custom alias must not exceed 50 characters")
