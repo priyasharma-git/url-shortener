@@ -9,6 +9,7 @@ type UrlShortenerProps = {
 export const UrlShortener = ({ onUrlCreated }: UrlShortenerProps) => {
     const [originalUrl, setOriginalUrl] = useState('');
     const [customAlias, setCustomAlias] = useState('');
+    const [expirationDays, setExpirationDays] = useState<string>('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
@@ -25,10 +26,14 @@ export const UrlShortener = ({ onUrlCreated }: UrlShortenerProps) => {
             if (trimmedAlias) {
                 data.customAlias = trimmedAlias;
             }
-            const response = await urlService.createShortUrl({ originalUrl, customAlias });
+            if(expirationDays && parseInt(expirationDays) > 0) {
+                data.expirationDays = parseInt(expirationDays);
+            }
+            const response = await urlService.createShortUrl(data);
             onUrlCreated(response);
             setOriginalUrl('');
             setCustomAlias('');
+            setExpirationDays('');
         } catch (err: any) {
             setError(err.response?.data?.message || 'An error occurred while shortening the URL.');
         } finally {
@@ -78,6 +83,28 @@ export const UrlShortener = ({ onUrlCreated }: UrlShortenerProps) => {
                             Preview: localhost:8080/{customAlias}
                         </p>
                     )}
+                </div>
+
+                <div>
+                    <label htmlFor="expirationDays" className='field-label'>
+                        Expiration (Days)
+                        <span className='ml-2 text-sm font-normal text-slate-400'>
+                            (Optional)
+                        </span>
+                    </label>
+                    <input
+                        id="expirationDays"
+                        type="number"
+                        value={expirationDays}
+                        onChange={(e) => setExpirationDays(e.target.value)}
+                        placeholder="30"
+                        min={1}
+                        max={365}
+                        className="input-field"
+                    />
+                    <p className='helper-text'>
+                        Enter number of days (1-365) or leave empty for a permanent link
+                    </p>
                 </div>
 
                 {error && (

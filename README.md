@@ -8,13 +8,14 @@ The application supports creating short URLs, redirecting users, tracking analyt
 
 # Features
 
-* Short URL generation
+* Short URL generation with Base62 encoding
 * Custom aliases
-* Link expiration
+* Configurable link expiration (1-365 days)
 * Analytics dashboard
 * Rate limiting
 * Redis caching
 * Modern React frontend
+* Environment-based configuration
 
 ---
 
@@ -185,33 +186,3 @@ PostgreSQL     Redis
 ```
 
 ---
-
-# Development Roadmap
-
-## Backend
-
-* [x] Initial Spring Boot setup
-* [x] PostgreSQL integration
-* [x] Redis infrastructure
-* [x] URL generation service
-* [x] Base62 short code generation
-* [x] Redirect service
-* [x] Redis caching
-* [x] Analytics system
-* [x] Rate limiting
-* [x] Expiration handling
-
-## Frontend
-
-* [X] React setup
-* [X] Dashboard UI
-* [X] URL creation interface
-* [X] Analytics visualization
-* [X] Animations
-* [X] Responsive design
-
-## Deployment
-
-* [ ] Docker production setup
-* [ ] CI/CD pipeline
-* [ ] Cloud deployment

@@ -11,9 +11,11 @@ import com.urlShortner.backend.interceptor.RateLimitInterceptor;
 public class WebConfig implements WebMvcConfigurer {
 
     private final RateLimitInterceptor rateLimitInterceptor;
+    private final AppConfig appConfig;
 
-    public WebConfig(RateLimitInterceptor rateLimitInterceptor) {
+    public WebConfig(RateLimitInterceptor rateLimitInterceptor, AppConfig appConfig) {
         this.rateLimitInterceptor = rateLimitInterceptor;
+        this.appConfig = appConfig;
     }
 
     @Override
@@ -24,7 +26,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:5173", "http://127.0.0.1:5173")
+                .allowedOrigins(appConfig.getFrontendUrl(), "http://127.0.0.1:5173")
                 .allowedMethods("GET", "POST")
                 .allowedHeaders("*")
                 .allowCredentials(true);

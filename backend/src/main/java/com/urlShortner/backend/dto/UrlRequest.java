@@ -18,7 +18,7 @@ public class UrlRequest {
     @Size(max = 50, message = "Custom alias must not exceed 50 characters")
     private String customAlias;
 
-    @Min(0)
-    @Max(365)
+    @Min(value = 1, message = "Expiration days must be at least 1")
+    @Max(value = 365, message = "Expiration days must not exceed 365")
     private Integer expirationDays;
 }

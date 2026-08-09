@@ -1,6 +1,7 @@
 export type UrlRequest = {
     originalUrl: string,
     customAlias?: string,
+    expirationDays?: string,
 }
 
 export type UrlResponse = {
