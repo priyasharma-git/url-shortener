@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { urlService } from '../services/api';
 import type { UrlResponse } from '../types';
 
+const SHORT_URL_BASE_URL = import.meta.env.VITE_SHORT_URL_BASE_URL || 'http://localhost:8080';
+
 type UrlShortenerProps = {
     onUrlCreated: (response: UrlResponse) => void;
 }
@@ -80,7 +82,7 @@ export const UrlShortener = ({ onUrlCreated }: UrlShortenerProps) => {
                     />
                     {customAlias && (
                         <p className='helper-text'>
-                            Preview: localhost:8080/{customAlias}
+                            Preview: {SHORT_URL_BASE_URL.replace(/^https?:\/\//, '')}/{customAlias}
                         </p>
                     )}
                 </div>

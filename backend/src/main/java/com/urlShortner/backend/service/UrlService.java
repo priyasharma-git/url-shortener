@@ -1,5 +1,6 @@
 package com.urlShortner.backend.service;
 
+import com.urlShortner.backend.config.AppConfig;
 import com.urlShortner.backend.dto.UrlRequest;
 import com.urlShortner.backend.dto.UrlResponse;
 import com.urlShortner.backend.dto.UrlStatsResponse;
@@ -24,12 +25,14 @@ public class UrlService {
     private final CacheService cacheService;
     private final UrlValidatorService urlValidator;
     private final StatsService statsService;
+    private final AppConfig appConfig;
 
-    public UrlService(UrlRepository urlRepository, CacheService cacheService, UrlValidatorService urlValidator, StatsService statsService) {
+    public UrlService(UrlRepository urlRepository, CacheService cacheService, UrlValidatorService urlValidator, StatsService statsService, AppConfig appConfig) {
         this.urlRepository = urlRepository;
         this.cacheService = cacheService;
         this.urlValidator = urlValidator;
         this.statsService = statsService;
+        this.appConfig = appConfig;
     }
 
     public UrlResponse createShortUrl(UrlRequest request) {
@@ -72,7 +75,7 @@ public class UrlService {
 
             return new UrlResponse(
                     shortCode,
-                    "http://localhost:8080/" + shortCode,
+                    appConfig.getBaseUrl() + "/" + shortCode,
                     savedUrl.getExpiresAt());
         } catch (DataIntegrityViolationException e) {
             if (customAlias != null) {

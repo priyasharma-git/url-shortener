@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.time.LocalDateTime;
 
 public interface UrlRepository extends JpaRepository<Url, Long> {
 
@@ -23,4 +24,9 @@ public interface UrlRepository extends JpaRepository<Url, Long> {
     @Transactional
     @Query("UPDATE Url u SET u.clickCount = u.clickCount + 1 WHERE u.shortCode = :shortCode")
     int incrementClickCount(@Param("shortCode") String shortCode);
+
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM Url u WHERE u.expiresAt < :now")
+    int deleteByExpiresAtBefore(@Param("now") LocalDateTime now);
 }
