@@ -38,6 +38,10 @@ public class UrlService {
             customAlias = null;
         }
 
+        if(customAlias!=null && !urlValidator.isValidCustomAlias(customAlias)) {
+            throw new IllegalArgumentException("Custom alias must contain only alphanumeric characters, hyphens, and underscores");
+        }
+
         if (customAlias != null && urlRepository.existsByCustomAlias(customAlias)) {
             throw new CustomAliasAlreadyExistsException("Custom alias already exists");
         }
