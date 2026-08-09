@@ -1,5 +1,7 @@
 package com.urlShortner.backend.dto;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.URL;
 import jakarta.validation.constraints.Size;
@@ -15,4 +17,8 @@ public class UrlRequest {
     
     @Size(max = 50, message = "Custom alias must not exceed 50 characters")
     private String customAlias;
+
+    @Min(0)
+    @Max(365)
+    private Integer expirationDays;
 }
